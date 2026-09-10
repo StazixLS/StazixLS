@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/StazixLS.png?size=200" width="100" alt="Sev"><br/>
+  <img src="https://github.com/StazixLS.png?s=200" width="100" alt="Sev"><br/>
   <b>@StazixLS</b> &nbsp;&middot;&nbsp; Game Developer &nbsp;&middot;&nbsp; France
 </p>
 
