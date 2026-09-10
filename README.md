@@ -1,10 +1,37 @@
+<p align="center">
+  <img src="https://github.com/StazixLS.png?size=200" width="100" alt="Sev"><br/>
+  <b>@StazixLS</b> &nbsp;&middot;&nbsp; Game Developer &nbsp;&middot;&nbsp; France
+</p>
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/light.svg">
-  <img alt="Sev" src="https://raw.githubusercontent.com/StazixLS/StazixLS/main/light.svg">
+  <img alt="Sev" src="https://raw.githubusercontent.com/StazixLS/StazixLS/main/light.svg" width="100%">
 </picture>
 
-<br/>
+```csharp
+// Profile.cs
+namespace StazixLS.Profile;
+
+public class Sev : GameDeveloper
+{
+    public string Role       = "Game Developer";
+    public string Origin     = "France";
+    public string Education  = "Objectif 3D";
+    public string Status     = "Gameplay & UI systems · Open to internships";
+
+    public string[] Languages = { "C++", "C#", "Python" };
+    public string[] Engines   = { "Unity", "Unreal Engine 5" };
+    public string[] Gameplay  = { "UI/UX", "VR", "Widgets" };
+    public string[] Tools     = { "Visual Studio", "Git", "Perforce" };
+
+    public string Portfolio => "stazixls.github.io";
+}
+```
+
+<sub>&#128257; main &nbsp;&middot;&nbsp; &#9679; Ready &nbsp;&middot;&nbsp; stazixls.github.io</sub>
+
+<br/><br/>
 
 <div align="center">
 
