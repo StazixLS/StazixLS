@@ -7,6 +7,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: stats-generation
+  cancel-in-progress: false
+
 jobs:
   update-stats:
     permissions:
@@ -15,6 +19,8 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -22,6 +28,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 scripts/generate_stats.py
+      - name: Pull latest before commit
+        run: git pull --rebase origin main
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
