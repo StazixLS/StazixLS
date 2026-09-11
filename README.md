@@ -1,8 +1,3 @@
-<p align="center">
-  <img src="https://github.com/StazixLS.png?s=200" width="100" alt="Sev"><br/>
-  <b>@StazixLS</b> &nbsp;&middot;&nbsp; Game Developer &nbsp;&middot;&nbsp; France
-</p>
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/light.svg">
