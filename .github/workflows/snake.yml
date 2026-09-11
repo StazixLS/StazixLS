@@ -7,6 +7,10 @@ on:
   push:
     branches: [main]
 
+concurrency:
+  group: snake-generation
+  cancel-in-progress: false
+
 jobs:
   generate:
     permissions:
