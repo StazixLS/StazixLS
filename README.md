@@ -8,6 +8,14 @@
 
 <div align="center">
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/output/github-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/output/github-snake.svg">
+  <img alt="Snake eating my contributions" src="https://raw.githubusercontent.com/StazixLS/StazixLS/output/github-snake.svg" width="100%">
+</picture>
+
+<br/><br/>
+
 <img width="100%" src="https://streak-stats.demolab.com/?user=StazixLS&hide_border=true&background=191724&stroke=26233a&ring=c4a7e7&fire=ea9a97&currStreakLabel=c4a7e7&sideLabels=908caa&currStreakNum=e0def4&sideNums=e0def4&dates=6e6a86&titleColor=c4a7e7&card_width=940" alt="streak stats" />
 
 <br/>
