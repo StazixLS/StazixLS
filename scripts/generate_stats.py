@@ -50,14 +50,22 @@ LIGHT = dict(base="#faf4ed", surface="#fffaf3", overlay="#f2e9e1",
 
 W = 980
 HEADER_H = 26
+SCENE_H = 86
 ROW_H = 96
-H = HEADER_H + ROW_H
+H = HEADER_H + SCENE_H + ROW_H
 FONT_UI = "Sora, 'Segoe UI', -apple-system, sans-serif"
+
+THEME_LABELS = {
+    "halloween": "Happy Halloween", "christmas": "Merry Christmas",
+    "newyear": "Happy New Year", "easter": "Happy Easter",
+    "winter": "Winter", "spring": "Spring", "summer": "Summer", "autumn": "Autumn",
+}
 
 def esc(s):
     return html.escape(s, quote=False)
 
-def build_svg(p, stats):
+def build_svg(p, stats, theme):
+    from seasonal_scene import build_scene
     col_w = W / len(stats)
     parts = [f'<svg viewBox="0 0 {W} {H}" width="{W}" height="{H}" xmlns="http://www.w3.org/2000/svg">']
     parts.append('<defs>')
@@ -69,33 +77,42 @@ def build_svg(p, stats):
     parts.append(f'<circle cx="16" cy="{HEADER_H/2}" r="3.5" fill="{p["foam"]}">'
                  f'<animate attributeName="opacity" values="1;0.35;1" dur="2s" repeatCount="indefinite"/></circle>')
     parts.append(f'<text x="26" y="{HEADER_H/2+4}" font-family="{FONT_UI}" font-size="11" fill="{p["subtle"]}">git log --stat --author={USER}</text>')
+    parts.append(f'<text x="{W-16}" y="{HEADER_H/2+4}" font-family="{FONT_UI}" font-size="10.5" fill="{p["subtle"]}" '
+                 f'text-anchor="end" opacity="0.75">{esc(THEME_LABELS.get(theme, ""))}</text>')
     parts.append(f'<line x1="0" y1="{HEADER_H}" x2="{W}" y2="{HEADER_H}" stroke="{p["overlay"]}" stroke-width="1"/>')
-    from seasonal import render_seasonal_row
-    season_colors = [p["rose"], p["iris"], p["gold"], p["foam"]]
-    parts.append(render_seasonal_row(p, season_colors, 300, W - 16, HEADER_H/2))
 
+    scene_y = HEADER_H
+    parts.append(f'<g transform="translate(0,{scene_y})">')
+    parts.append(f'<rect x="0" y="0" width="{W}" height="{SCENE_H}" fill="{p["hi_low"] if "hi_low" in p else p["surface"]}"/>')
+    parts.append(build_scene(theme, p, W, SCENE_H))
+    parts.append('</g>')
+    parts.append(f'<line x1="0" y1="{HEADER_H+SCENE_H}" x2="{W}" y2="{HEADER_H+SCENE_H}" stroke="{p["overlay"]}" stroke-width="1"/>')
+
+    row_top = HEADER_H + SCENE_H
     for i, (value, label, color_key) in enumerate(stats):
         cx = col_w * i + col_w / 2
         color = p[color_key]
         begin = 0.15 + i * 0.12
-        parts.append(f'<g opacity="0" transform="translate({cx},{HEADER_H+ROW_H/2})">'
+        parts.append(f'<g opacity="0" transform="translate({cx},{row_top+ROW_H/2})">'
                      f'<animate attributeName="opacity" from="0" to="1" begin="{begin}s" dur="0.5s" fill="freeze"/>'
                      f'<animateTransform attributeName="transform" type="translate" '
-                     f'from="{cx} {HEADER_H+ROW_H/2+10}" to="{cx} {HEADER_H+ROW_H/2}" begin="{begin}s" dur="0.5s" fill="freeze"/>'
+                     f'from="{cx} {row_top+ROW_H/2+10}" to="{cx} {row_top+ROW_H/2}" begin="{begin}s" dur="0.5s" fill="freeze"/>'
                      f'<text x="0" y="-6" font-family="{FONT_UI}" font-size="30" font-weight="700" '
                      f'fill="{color}" text-anchor="middle">{esc(str(value))}</text>'
                      f'<text x="0" y="20" font-family="{FONT_UI}" font-size="11.5" '
                      f'fill="{p["subtle"]}" text-anchor="middle">{esc(label)}</text>'
                      f'</g>')
         if i > 0:
-            parts.append(f'<line x1="{col_w*i}" y1="{HEADER_H+18}" x2="{col_w*i}" y2="{H-18}" stroke="{p["overlay"]}" stroke-width="1"/>')
+            parts.append(f'<line x1="{col_w*i}" y1="{row_top+18}" x2="{col_w*i}" y2="{H-18}" stroke="{p["overlay"]}" stroke-width="1"/>')
     parts.append('</g></svg>')
     return "".join(parts)
 
 def main():
+    from seasonal import get_theme
     repos, created_at = get_repo_count()
     total_contrib, streak = get_contribution_stats()
     since_year = created_at[:4] if created_at else "?"
+    theme = get_theme()
 
     stats = [
         (f"{total_contrib}", "Contributions (1y)", "rose"),
@@ -105,10 +122,10 @@ def main():
     ]
 
     with open("stats-dark.svg", "w") as f:
-        f.write(build_svg(DARK, stats))
+        f.write(build_svg(DARK, stats, theme))
     with open("stats-light.svg", "w") as f:
-        f.write(build_svg(LIGHT, stats))
-    print("Updated:", stats)
+        f.write(build_svg(LIGHT, stats, theme))
+    print("Updated:", stats, "theme:", theme)
 
 if __name__ == "__main__":
     main()
