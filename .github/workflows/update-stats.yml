@@ -25,18 +25,20 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Generate stats SVGs
+      - name: Generate stats SVG
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 scripts/generate_stats.py
+      - name: Generate seasonal scene SVG
+        run: python3 scripts/generate_season.py
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add stats-dark.svg stats-light.svg
+          git add stats-dark.svg stats-light.svg season-dark.svg season-light.svg
           if git diff --cached --quiet; then
             echo "no changes"
           else
-            git commit -m "Update stats panel [skip ci]"
+            git commit -m "Update stats + seasonal scene [skip ci]"
             git push origin HEAD:main
           fi
