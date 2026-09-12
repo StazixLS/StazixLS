@@ -7,6 +7,14 @@
 <br/>
 
 <picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/season-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/season-light.svg">
+  <img alt="Seasonal scene" src="https://raw.githubusercontent.com/StazixLS/StazixLS/main/season-light.svg" width="100%">
+</picture>
+
+<br/>
+
+<picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/stats-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/StazixLS/StazixLS/main/stats-light.svg">
   <img alt="Stats" src="https://raw.githubusercontent.com/StazixLS/StazixLS/main/stats-light.svg" width="100%">
