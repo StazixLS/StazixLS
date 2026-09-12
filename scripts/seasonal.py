@@ -30,13 +30,19 @@ def get_theme(d=None):
         return "christmas"
     if m == 1 and day <= 6:
         return "newyear"
-    if m in (12, 1, 2):
-        return "winter"
-    if m in (3, 4, 5):
+    # astronomical seasons (approx equinox/solstice dates), not calendar months
+    y = d.year
+    spring_start = date(y, 3, 20)
+    summer_start = date(y, 6, 21)
+    autumn_start = date(y, 9, 22)
+    winter_start = date(y, 12, 21)
+    if spring_start <= d < summer_start:
         return "spring"
-    if m in (6, 7, 8):
+    if summer_start <= d < autumn_start:
         return "summer"
-    return "autumn"
+    if autumn_start <= d < winter_start:
+        return "autumn"
+    return "winter"
 
 def snowflake(cx, cy, s, color):
     out = []
