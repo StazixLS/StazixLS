@@ -70,6 +70,9 @@ def build_svg(p, stats):
                  f'<animate attributeName="opacity" values="1;0.35;1" dur="2s" repeatCount="indefinite"/></circle>')
     parts.append(f'<text x="26" y="{HEADER_H/2+4}" font-family="{FONT_UI}" font-size="11" fill="{p["subtle"]}">git log --stat --author={USER}</text>')
     parts.append(f'<line x1="0" y1="{HEADER_H}" x2="{W}" y2="{HEADER_H}" stroke="{p["overlay"]}" stroke-width="1"/>')
+    from seasonal import render_seasonal_row
+    season_colors = [p["rose"], p["iris"], p["gold"], p["foam"]]
+    parts.append(render_seasonal_row(p, season_colors, 300, W - 16, HEADER_H/2))
 
     for i, (value, label, color_key) in enumerate(stats):
         cx = col_w * i + col_w / 2
