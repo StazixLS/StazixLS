@@ -21,17 +21,36 @@ def easter_date(year):
 def get_theme(d=None):
     d = d or date.today()
     m, day = d.month, d.day
-    easter = easter_date(d.year)
+    y = d.year
+    easter = easter_date(y)
+
+    def within(month_, day_, span=1):
+        target = date(y, month_, day_)
+        return abs((d - target).days) <= span
+
     if abs((d - easter).days) <= 4:
         return "easter"
-    if (m == 10 and day >= 22) or (m == 11 and day <= 2):
+    if within(5, 1, 1):
+        return "labor_day"
+    if within(5, 8, 1):
+        return "ve_day"
+    if within(6, 21, 1):
+        return "music_day"
+    if within(7, 14, 1):
+        return "bastille_day"
+    if within(8, 15, 1):
+        return "assumption"
+    if m == 10 and day >= 24:
         return "halloween"
+    if m == 11 and day == 1:
+        return "toussaint"
+    if within(11, 11, 1):
+        return "armistice"
     if m == 12 and day >= 14:
         return "christmas"
     if m == 1 and day <= 6:
         return "newyear"
     # astronomical seasons (approx equinox/solstice dates), not calendar months
-    y = d.year
     spring_start = date(y, 3, 20)
     summer_start = date(y, 6, 21)
     autumn_start = date(y, 9, 22)
