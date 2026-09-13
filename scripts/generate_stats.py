@@ -50,15 +50,17 @@ LIGHT = dict(base="#faf4ed", surface="#fffaf3", overlay="#f2e9e1",
 
 W = 980
 HEADER_H = 26
-SCENE_H = 86
 ROW_H = 96
-H = HEADER_H + SCENE_H + ROW_H
+H = HEADER_H + ROW_H
 FONT_UI = "Sora, 'Segoe UI', -apple-system, sans-serif"
 
 THEME_LABELS = {
     "halloween": "Happy Halloween", "christmas": "Merry Christmas",
     "newyear": "Happy New Year", "easter": "Happy Easter",
     "winter": "Winter", "spring": "Spring", "summer": "Summer", "autumn": "Autumn",
+    "labor_day": "Fete du Travail", "ve_day": "8 Mai 1945", "music_day": "Fete de la Musique",
+    "bastille_day": "Fete Nationale", "assumption": "Assomption",
+    "toussaint": "Toussaint", "armistice": "11 Novembre 1918",
 }
 
 def esc(s):
@@ -81,14 +83,13 @@ def build_svg(p, stats, theme):
                  f'text-anchor="end" opacity="0.75">{esc(THEME_LABELS.get(theme, ""))}</text>')
     parts.append(f'<line x1="0" y1="{HEADER_H}" x2="{W}" y2="{HEADER_H}" stroke="{p["overlay"]}" stroke-width="1"/>')
 
-    scene_y = HEADER_H
-    parts.append(f'<g transform="translate(0,{scene_y})">')
-    parts.append(f'<rect x="0" y="0" width="{W}" height="{SCENE_H}" fill="{p["hi_low"] if "hi_low" in p else p["surface"]}"/>')
-    parts.append(build_scene(theme, p, W, SCENE_H))
+    # seasonal scene as a background layer, behind the numbers, same original panel size
+    row_top = HEADER_H
+    parts.append(f'<rect x="0" y="{row_top}" width="{W}" height="{ROW_H}" fill="{p["surface"]}"/>')
+    parts.append(f'<g transform="translate(0,{row_top})" opacity="0.55">')
+    parts.append(build_scene(theme, p, W, ROW_H))
     parts.append('</g>')
-    parts.append(f'<line x1="0" y1="{HEADER_H+SCENE_H}" x2="{W}" y2="{HEADER_H+SCENE_H}" stroke="{p["overlay"]}" stroke-width="1"/>')
 
-    row_top = HEADER_H + SCENE_H
     for i, (value, label, color_key) in enumerate(stats):
         cx = col_w * i + col_w / 2
         color = p[color_key]
