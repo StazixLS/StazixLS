@@ -61,6 +61,10 @@ THEME_LABELS = {
     "labor_day": "Fete du Travail", "ve_day": "8 Mai 1945", "music_day": "Fete de la Musique",
     "bastille_day": "Fete Nationale", "assumption": "Assomption",
     "toussaint": "Toussaint", "armistice": "11 Novembre 1918",
+    "epiphany": "Epiphanie", "candlemas": "Chandeleur", "mardi_gras": "Mardi Gras",
+    "ascension": "Ascension", "pentecost": "Pentecote",
+    "mothers_day": "Fete des Meres", "fathers_day": "Fete des Peres",
+    "valentines": "Saint-Valentin", "chinese_new_year": "Nouvel An chinois",
 }
 
 def esc(s):
