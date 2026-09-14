@@ -700,11 +700,13 @@ def build_scene(theme, p, W=980, H=150):
         out.append(sailboat(W * 0.62, ground_y - 2, 12, p["muted"], p["gold"], begin=1.2))
     elif theme == "halloween":
         out.append(scene_fog(W, H, p["muted"]))
-        out.append(jack_o_lantern(W * 0.16, ground_y - 4, 28, "#e8823c", "#ffdb8a", begin=0))
-        out.append(jack_o_lantern(W * 0.45, ground_y - 14, 36, "#d9711f", "#ffdb8a", begin=0.7))
-        out.append(jack_o_lantern(W * 0.75, ground_y - 2, 24, "#e8823c", "#ffdb8a", begin=1.3))
-        out.append(scene_bat(22, "#2a2733", dur=10, begin=0, s=17))
-        out.append(scene_bat(62, "#413d4d", dur=8.5, begin=3, s=13))
+        out.append(jack_o_lantern(W * 0.12, ground_y - 2, 22, "#e8823c", "#ffdb8a", begin=0))
+        out.append(jack_o_lantern(W * 0.4, ground_y - 24, 38, "#d9711f", "#ffdb8a", begin=0.7))
+        out.append(jack_o_lantern(W * 0.68, ground_y - 6, 26, "#e8823c", "#ffdb8a", begin=1.3))
+        out.append(jack_o_lantern(W * 0.88, ground_y - 16, 18, "#d9711f", "#ffdb8a", begin=1.9))
+        out.append(scene_bat(20, "#2a2733", dur=10, begin=0, s=17))
+        out.append(scene_bat(66, "#413d4d", dur=8.5, begin=3, s=13))
+        out.append(scene_bat(40, "#5a5568", dur=12, begin=5.5, s=10))
     elif theme == "christmas":
         out.append(scene_tree(W * 0.24, ground_y, 60, p["muted"], p["pine"], [p["rose"], p["gold"], p["foam"], p["iris"]]))
         out.append(scene_santa(38, p["muted"], p["rose"], p["text"], dur=13, begin=1))
@@ -716,22 +718,35 @@ def build_scene(theme, p, W=980, H=150):
         year_text = str(__import__("datetime").date.today().year)
         out.append(scene_banner(W * 0.5, H - 8, 130, 22, p["iris"], p["base"], year_text))
     elif theme == "easter":
-        eggs = [(W*0.18, ground_y-4), (W*0.4, ground_y-20), (W*0.63, ground_y-2), (W*0.84, ground_y-16)]
+        eggs = [(W*0.14, ground_y-2), (W*0.37, ground_y-26), (W*0.6, ground_y-8), (W*0.82, ground_y-20)]
         egg_colors = [p["rose"], p["foam"], p["gold"], p["iris"]]
         for i, (x, y) in enumerate(eggs):
             out.append(scene_egg(x, y, 11, egg_colors[i % len(egg_colors)], p["base"]))
         out.append(scene_bunny(eggs, dur=8.0, color=p["text"]))
     elif theme == "labor_day":
-        for i, (x, sc) in enumerate([(W*0.28, 0.85), (W*0.5, 1.1), (W*0.72, 0.9)]):
-            out.append(muguet_sprig(x, ground_y, 34 * sc, "#faf6ee", p["pine"], begin=i*0.4))
+        for i, (x, sc, y_off) in enumerate([(W*0.26, 0.85, 0), (W*0.5, 1.15, -10), (W*0.74, 0.95, 4)]):
+            out.append(muguet_sprig(x, ground_y + y_off, 34 * sc, "#faf6ee", p["pine"], begin=i*0.4))
     elif theme == "ve_day":
         out.append(arc_de_triomphe(W*0.5, ground_y, 64, p["subtle"]))
         out.append(scene_flame(W*0.5, ground_y - 6, 10, p["gold"], p["rose"]))
         for i, x in enumerate([W*0.3, W*0.7]):
-            out.append(f'<g transform="translate({x},{ground_y-14})">{cornflower_shape("#4a6fa5", "#faf4ed")}</g>')
-        out.append(f'<rect x="{W*0.5-40}" y="8" width="26.6" height="7" fill="#0055A4"/>'
-                   f'<rect x="{W*0.5-13.3}" y="8" width="26.6" height="7" fill="#FFFFFF"/>'
-                   f'<rect x="{W*0.5+13.3}" y="8" width="26.6" height="7" fill="#EF4135"/>')
+            out.append(f'<g transform="translate({x},{ground_y-14})">'
+                       f'<animateTransform attributeName="transform" type="rotate" values="-4;4;-4" '
+                       f'begin="{i*0.4}s" dur="3s" repeatCount="indefinite" additive="sum"/>'
+                       f'{cornflower_shape("#4a6fa5", "#faf4ed")}</g>')
+        bunting_y = 20
+        flag_colors = ["#0055A4", "#FFFFFF", "#EF4135"] * 3
+        n_flags = 9
+        for i in range(n_flags):
+            fx = W*0.5 - 120 + i * 30
+            sway = 6 if i % 2 == 0 else -6
+            out.append(f'<path d="M{fx:.1f},{bunting_y:.1f} L{fx+14:.1f},{bunting_y:.1f} L{fx+7:.1f},{bunting_y+16:.1f} Z" '
+                       f'fill="{flag_colors[i]}" opacity="0.9">'
+                       f'<animateTransform attributeName="transform" type="rotate" '
+                       f'values="0 {fx+7} {bunting_y};{sway} {fx+7} {bunting_y};0 {fx+7} {bunting_y}" '
+                       f'begin="{i*0.15:.2f}s" dur="2.6s" repeatCount="indefinite"/></path>')
+        out.append(f'<path d="M{W*0.5-120:.1f},{bunting_y:.1f} Q{W*0.5:.1f},{bunting_y+12:.1f} {W*0.5+120:.1f},{bunting_y:.1f}" '
+                   f'fill="none" stroke="{p["subtle"]}" stroke-width="1" opacity="0.4"/>')
     elif theme == "music_day":
         colors = [p["rose"], p["iris"], p["gold"], p["foam"]]
         out.append(floating_up("note", 14, W, H, colors, seed=44))
@@ -744,30 +759,58 @@ def build_scene(theme, p, W=980, H=150):
         for i, (x, y, s, c) in enumerate(pts):
             out.append(scene_firework(x, y, s, c, begin=4.5 + i*0.5, dur=2.2+(i%3)*0.3))
     elif theme == "assumption":
-        out.append(crescent_stars(W*0.5, 55, 16, "#faf4ed", p["gold"]))
+        cx, cy = W*0.5, 58
+        out.append(f'<g transform="translate({cx},{cy})">'
+                   f'<animateTransform attributeName="transform" type="rotate" values="0;360" '
+                   f'dur="26s" repeatCount="indefinite" additive="sum"/>'
+                   f'{crescent_stars(0, 0, 16, "#faf4ed", p["gold"])}</g>')
+        out.append(scene_light_rays(W*0.5, 6, 50, p["gold"]))
+        rng = random.Random(21)
+        for i in range(6):
+            x0 = rng.uniform(W*0.15, W*0.85)
+            dur = rng.uniform(6, 10)
+            begin = -rng.uniform(0, dur)
+            out.append(f'<g transform="translate({x0:.1f},-8) scale(0.8)" opacity="0.7">'
+                       f'<animateTransform attributeName="transform" type="translate" additive="sum" '
+                       f'values="0 0;0 {H+10:.1f}" begin="{begin:.1f}s" dur="{dur:.1f}s" repeatCount="indefinite"/>'
+                       f'{star_shape(p["gold"])}</g>')
     elif theme == "toussaint":
         colors = ["#c9835a", "#b5654a", p["gold"], p["subtle"]]
-        heights = [ground_y-8, ground_y-22, ground_y-4, ground_y-16]
-        for i, x in enumerate([W*0.18, W*0.38, W*0.6, W*0.8]):
+        heights = [ground_y-6, ground_y-26, ground_y-2, ground_y-18]
+        for i, x in enumerate([W*0.15, W*0.36, W*0.6, W*0.82]):
             out.append(f'<g transform="translate({x},{heights[i]:.1f})">'
-                       f'<animateTransform attributeName="transform" type="rotate" values="-2;2;-2" '
-                       f'begin="{i*0.5}s" dur="4s" repeatCount="indefinite" additive="sum"/>'
+                       f'<animateTransform attributeName="transform" type="rotate" values="-3;3;-3" '
+                       f'begin="{i*0.5}s" dur="3.4s" repeatCount="indefinite" additive="sum"/>'
                        f'{mum_shape(colors[i%len(colors)], p["base"])}</g>')
         out.append(candle_shape(W*0.5, ground_y, 16, "#efe6d8", p["gold"], begin=0))
+        out.append(falling_particles("leaf", 8, W, H, ["#c17a4e", "#a86b3f"], seed=12, dur_range=(7, 11)))
     elif theme == "armistice":
         out.append(memorial_cross(W*0.5, ground_y, 34, p["subtle"]))
         out.append(scene_flame(W*0.5, ground_y - 40, 9, p["gold"], p["rose"]))
-        for i, x in enumerate([W*0.28, W*0.72]):
-            out.append(f'<g transform="translate({x},{ground_y-14})">{cornflower_shape("#4a6fa5", p["gold"])}</g>')
+        for i, x in enumerate([W*0.22, W*0.78]):
+            out.append(f'<g transform="translate({x},{ground_y-14})">'
+                       f'<animateTransform attributeName="transform" type="rotate" values="-4;4;-4" '
+                       f'begin="{i*0.6}s" dur="3.2s" repeatCount="indefinite" additive="sum"/>'
+                       f'{cornflower_shape("#4a6fa5", p["gold"])}</g>')
+        for i, x in enumerate([W*0.38, W*0.62]):
+            out.append(f'<g transform="translate({x},{ground_y-10})" opacity="0.85">'
+                       f'<animateTransform attributeName="transform" type="rotate" values="4;-4;4" '
+                       f'begin="{i*0.6+0.3}s" dur="3.2s" repeatCount="indefinite" additive="sum"/>'
+                       f'{cornflower_shape("#4a6fa5", p["gold"])}</g>')
     elif theme == "epiphany":
-        out.append(galette(W*0.5, ground_y - 6, 30, "#e8b95c", "#c98a2e"))
-        out.append(crown_shape(W*0.5, ground_y - 44, 26, p["gold"], p["rose"]))
+        cx, cy = W*0.5, 84
+        out.append(f'<g transform="translate({cx},{cy})">'
+                   f'<animateTransform attributeName="transform" type="rotate" values="0;360" '
+                   f'dur="18s" repeatCount="indefinite" additive="sum"/>{galette(0, 0, 26, "#e8b95c", "#c98a2e")}</g>')
+        out.append(f'<g transform="translate({cx},{cy-42:.1f})">'
+                   f'<animateTransform attributeName="transform" type="translate" additive="sum" '
+                   f'values="0 0;0 -4;0 0" dur="2.2s" repeatCount="indefinite"/>{crown_shape(0, 0, 24, p["gold"], p["rose"])}</g>')
     elif theme == "candlemas":
         out.append(crepe_pan(W*0.5, ground_y - 10, 32, "#f3d9a0", "#4a4550", begin=0))
     elif theme == "mardi_gras":
         out.append(confetti_burst(W, H, [p["rose"], p["iris"], p["gold"], p["foam"]], n=22, seed=5))
-        out.append(mask_shape(W*0.28, ground_y - 26, 22, p["iris"], p["gold"]))
-        out.append(mask_shape(W*0.68, ground_y - 10, 18, p["rose"], p["gold"]))
+        out.append(mask_shape(W*0.26, ground_y - 28, 22, p["iris"], p["gold"]))
+        out.append(mask_shape(W*0.7, ground_y - 8, 18, p["rose"], p["gold"]))
     elif theme == "ascension":
         out.append(scene_light_rays(W*0.5, 8, 55, p["gold"]))
         colors = ["#f4c2c2", "#f7d6d6", p["rose"]]
@@ -783,15 +826,26 @@ def build_scene(theme, p, W=980, H=150):
         bouquet_x = W * 0.5
         for i, dx in enumerate([-16, 0, 16]):
             out.append(f'<g transform="translate({bouquet_x+dx:.1f},{ground_y - (10 if i==1 else 0):.1f})">'
+                       f'<animateTransform attributeName="transform" type="rotate" values="-3;3;-3" '
+                       f'begin="{i*0.3}s" dur="2.8s" repeatCount="indefinite" additive="sum"/>'
                        f'{flower_full(p["rose"] if i != 1 else p["gold"], p["base"])}</g>')
         for i, x in enumerate([W*0.28, W*0.72]):
             out.append(f'<g transform="translate({x},{50+i*10})">'
                        f'<animateTransform attributeName="transform" type="translate" additive="sum" '
                        f'values="0 0;0 -6;0 0" begin="{i*0.5}s" dur="2s" repeatCount="indefinite"/>{heart_shape(p["rose"])}</g>')
     elif theme == "fathers_day":
-        out.append(gift_box(W*0.35, ground_y - 14, 24, p["pine"], p["gold"]))
-        out.append(necktie_shape(W*0.58, ground_y - 48, 16, p["iris"]))
+        gx, gy = W*0.35, ground_y - 14
+        out.append(f'<g transform="translate({gx},{gy})">{gift_box(0, 0, 24, p["pine"], p["gold"])}</g>')
+        out.append(f'<g transform="translate({gx},{gy-24:.1f})">'
+                   f'<animateTransform attributeName="transform" type="rotate" values="-6;6;-6" '
+                   f'dur="1.6s" repeatCount="indefinite" additive="sum"/>'
+                   f'<path d="M-8,0 Q0,-6 8,0" fill="none" stroke="{p["gold"]}" stroke-width="2"/></g>')
+        out.append(f'<g transform="translate({W*0.58},{ground_y - 48})">'
+                   f'<animateTransform attributeName="transform" type="rotate" values="-5;5;-5" '
+                   f'dur="2.4s" repeatCount="indefinite" additive="sum"/>{necktie_shape(0, 0, 16, p["iris"])}</g>')
         out.append(f'<g transform="translate({W*0.78:.1f},{ground_y-16:.1f}) rotate(20)">'
+                   f'<animateTransform attributeName="transform" type="rotate" values="14;26;14" '
+                   f'dur="2s" repeatCount="indefinite"/>'
                    f'<rect x="-2.5" y="-16" width="5" height="24" rx="2" fill="{p["subtle"]}"/>'
                    f'<circle cx="0" cy="-16" r="6" fill="none" stroke="{p["subtle"]}" stroke-width="3"/></g>')
     elif theme == "valentines":
@@ -810,27 +864,32 @@ def build_scene(theme, p, W=980, H=150):
     elif theme == "chinese_new_year":
         from seasonal import current_zodiac_year, zodiac_animal
         animal = zodiac_animal(current_zodiac_year())
-        out.append(paper_lantern(W*0.1, 34, 18, "#c0392b", "#f1c40f", 0))
-        out.append(paper_lantern(W*0.1, 68, 14, "#a93226", "#f1c40f", 0.5))
-        out.append(paper_lantern(W*0.92, 30, 16, "#c0392b", "#f1c40f", 0.3))
-        out.append(paper_lantern(W*0.92, 62, 13, "#a93226", "#f1c40f", 0.8))
+        out.append(paper_lantern(W*0.1, 30, 16, "#c0392b", "#f1c40f", 0))
+        out.append(paper_lantern(W*0.1, 60, 12, "#a93226", "#f1c40f", 0.5))
+        out.append(paper_lantern(W*0.92, 26, 14, "#c0392b", "#f1c40f", 0.3))
+        out.append(paper_lantern(W*0.92, 54, 11, "#a93226", "#f1c40f", 0.8))
         for i, x in enumerate([W*0.25, W*0.75]):
-            out.append(firecracker_burst(x, 24 + i*14, 12, "#f1c40f", begin=i*0.8))
-        out.append(envelope_shape(W*0.86, ground_y - 8, 18, "#c0392b", "#f1c40f"))
+            out.append(firecracker_burst(x, 20 + i*10, 12, "#f1c40f", begin=i*0.8))
+        out.append(envelope_shape(W*0.86, ground_y - 6, 16, "#c0392b", "#f1c40f"))
         if animal == "dragon":
-            out.append(chinese_dragon(ground_y - 24, 11, "#c0392b", "#f1c40f", 9, 0))
+            out.append(chinese_dragon(ground_y - 30, 10, "#c0392b", "#f1c40f", 9, 0))
         else:
             shape_fn = ZODIAC_SHAPES.get(animal)
             if shape_fn:
-                cx, cy = W * 0.48, ground_y - 22
-                out.append(f'<circle cx="{cx}" cy="{cy}" r="40" fill="#c0392b" opacity="0.25"/>')
-                out.append(f'<circle cx="{cx}" cy="{cy}" r="40" fill="none" stroke="#f1c40f" stroke-width="1.5" opacity="0.6"/>')
+                cx, cy = W * 0.48, 78
+                out.append(f'<circle cx="{cx}" cy="{cy}" r="42" fill="#c0392b" opacity="0.28">'
+                           f'<animate attributeName="opacity" values="0.22;0.34;0.22" dur="2.6s" repeatCount="indefinite"/></circle>')
+                out.append(f'<circle cx="{cx}" cy="{cy}" r="42" fill="none" stroke="#f1c40f" stroke-width="1.6" opacity="0.7"/>')
                 out.append(f'<g transform="translate({cx},{cy})">'
                            f'<animateTransform attributeName="transform" type="translate" additive="sum" '
-                           f'values="0 0;0 -4;0 0" dur="2.4s" repeatCount="indefinite"/>'
-                           f'{shape_fn(0, 0, 34, "#f1c40f")}</g>')
+                           f'values="0 0;0 -5;0 0" dur="2.4s" repeatCount="indefinite"/>'
+                           f'{shape_fn(0, 0, 44, "#f1c40f")}'
+                           f'<circle r="44" fill="none" stroke="#7a1f16" stroke-width="1" opacity="0.35"/>'
+                           f'</g>')
     else:
         out.append(falling_particles("leaf", 14, W, H, [p["muted"]], seed=1))
+
+    return "".join(out)
 
     return "".join(out)
 
