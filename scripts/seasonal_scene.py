@@ -377,6 +377,86 @@ def firecracker_burst(cx, cy, s, color, begin):
            f'<animate attributeName="opacity" values="0;1;0" begin="{begin}s" dur="0.9s" repeatCount="indefinite"/>'
            f'{"".join(dots)}</g>')
 
+# ---------- Chinese zodiac animals (simple shared body+head template) ----------
+
+def _critter_base(cx, cy, s, color, ears, extras_back="", extras_front=""):
+    body = f'<ellipse cx="{cx}" cy="{cy+s*0.35:.1f}" rx="{s*0.85:.1f}" ry="{s*0.62:.1f}" fill="{color}"/>'
+    head = f'<circle cx="{cx}" cy="{cy-s*0.15:.1f}" r="{s*0.5:.1f}" fill="{color}"/>'
+    return extras_back + body + ears + head + extras_front
+
+def zodiac_rat(cx, cy, s, color):
+    ears = f'<circle cx="{cx-s*0.38:.1f}" cy="{cy-s*0.5:.1f}" r="{s*0.22:.1f}" fill="{color}"/><circle cx="{cx+s*0.38:.1f}" cy="{cy-s*0.5:.1f}" r="{s*0.22:.1f}" fill="{color}"/>'
+    tail = f'<path d="M{cx+s*0.8:.1f},{cy+s*0.5:.1f} Q{cx+s*1.6:.1f},{cy+s*0.1:.1f} {cx+s*2.1:.1f},{cy+s*0.5:.1f}" fill="none" stroke="{color}" stroke-width="1.6" stroke-linecap="round"/>'
+    nose = f'<circle cx="{cx}" cy="{cy-s*0.05:.1f}" r="{s*0.08:.1f}" fill="#2a2733"/>'
+    return _critter_base(cx, cy, s, color, ears, extras_back=tail, extras_front=nose)
+
+def zodiac_ox(cx, cy, s, color):
+    horns = (f'<path d="M{cx-s*0.15:.1f},{cy-s*0.5:.1f} Q{cx-s*0.65:.1f},{cy-s*0.6:.1f} {cx-s*0.55:.1f},{cy-s*1.0:.1f}" fill="none" stroke="{color}" stroke-width="{s*0.16:.1f}" stroke-linecap="round"/>'
+             f'<path d="M{cx+s*0.15:.1f},{cy-s*0.5:.1f} Q{cx+s*0.65:.1f},{cy-s*0.6:.1f} {cx+s*0.55:.1f},{cy-s*1.0:.1f}" fill="none" stroke="{color}" stroke-width="{s*0.16:.1f}" stroke-linecap="round"/>')
+    snout = f'<ellipse cx="{cx}" cy="{cy+s*0.1:.1f}" rx="{s*0.28:.1f}" ry="{s*0.18:.1f}" fill="#2a2733"/>'
+    return _critter_base(cx, cy, s, color, horns, extras_front=snout)
+
+def zodiac_tiger(cx, cy, s, color):
+    ears = f'<path d="M{cx-s*0.42:.1f},{cy-s*0.42:.1f} l{-s*0.24:.1f},{-s*0.34:.1f} l{s*0.34:.1f},{s*0.06:.1f} Z" fill="{color}"/><path d="M{cx+s*0.42:.1f},{cy-s*0.42:.1f} l{s*0.24:.1f},{-s*0.34:.1f} l{-s*0.34:.1f},{s*0.06:.1f} Z" fill="{color}"/>'
+    stripes = "".join(f'<line x1="{cx-s*0.55+i*s*0.35:.1f}" y1="{cy+s*0.05:.1f}" x2="{cx-s*0.42+i*s*0.35:.1f}" y2="{cy+s*0.8:.1f}" stroke="#2a2733" stroke-width="1.8"/>' for i in range(4))
+    return _critter_base(cx, cy, s, color, ears, extras_back=stripes)
+
+def zodiac_rabbit(cx, cy, s, color):
+    ears = f'<ellipse cx="{cx-s*0.22:.1f}" cy="{cy-s*0.85:.1f}" rx="{s*0.14:.1f}" ry="{s*0.45:.1f}" fill="{color}"/><ellipse cx="{cx+s*0.22:.1f}" cy="{cy-s*0.85:.1f}" rx="{s*0.14:.1f}" ry="{s*0.45:.1f}" fill="{color}"/>'
+    return _critter_base(cx, cy, s, color, ears)
+
+def zodiac_snake(cx, cy, s, color):
+    d = f"M{cx-s*1.4:.1f},{cy+s*0.3:.1f} Q{cx-s*0.7:.1f},{cy-s*0.5:.1f} {cx:.1f},{cy+s*0.3:.1f} Q{cx+s*0.7:.1f},{cy+s*1.1:.1f} {cx+s*1.2:.1f},{cy+s*0.3:.1f}"
+    body_l = f'<path d="{d}" fill="none" stroke="{color}" stroke-width="{s*0.42:.1f}" stroke-linecap="round"/>'
+    head = f'<circle cx="{cx+s*1.3:.1f}" cy="{cy+s*0.25:.1f}" r="{s*0.28:.1f}" fill="{color}"/>'
+    tongue = f'<line x1="{cx+s*1.55:.1f}" y1="{cy+s*0.2:.1f}" x2="{cx+s*1.8:.1f}" y2="{cy+s*0.15:.1f}" stroke="#e05a5a" stroke-width="1"/>'
+    return body_l + head + tongue
+
+def zodiac_horse(cx, cy, s, color):
+    ears = f'<path d="M{cx-s*0.2:.1f},{cy-s*0.5:.1f} l{-s*0.08:.1f},{-s*0.2:.1f} l{s*0.18:.1f},{s*0.08:.1f} Z" fill="{color}"/><path d="M{cx+s*0.2:.1f},{cy-s*0.5:.1f} l{s*0.08:.1f},{-s*0.2:.1f} l{-s*0.18:.1f},{s*0.08:.1f} Z" fill="{color}"/>'
+    mane = "".join(f'<line x1="{cx-s*0.15+i*s*0.15:.1f}" y1="{cy-s*0.45:.1f}" x2="{cx-s*0.2+i*s*0.15:.1f}" y2="{cy-s*0.78:.1f}" stroke="{color}" stroke-width="{s*0.11:.1f}" stroke-linecap="round"/>' for i in range(4))
+    legs = "".join(f'<line x1="{cx-s*0.5+i*s*0.35:.1f}" y1="{cy+s*0.85:.1f}" x2="{cx-s*0.5+i*s*0.35:.1f}" y2="{cy+s*1.3:.1f}" stroke="{color}" stroke-width="{s*0.15:.1f}" stroke-linecap="round"/>' for i in range(3))
+    snout = f'<ellipse cx="{cx}" cy="{cy+s*0.08:.1f}" rx="{s*0.18:.1f}" ry="{s*0.12:.1f}" fill="{color}"/>'
+    return _critter_base(cx, cy, s, color, ears, extras_back=legs + mane, extras_front=snout)
+
+def zodiac_goat(cx, cy, s, color):
+    horns = (f'<path d="M{cx-s*0.1:.1f},{cy-s*0.5:.1f} Q{cx-s*0.5:.1f},{cy-s*0.45:.1f} {cx-s*0.5:.1f},{cy-s*0.9:.1f}" fill="none" stroke="{color}" stroke-width="{s*0.13:.1f}" stroke-linecap="round"/>'
+             f'<path d="M{cx+s*0.1:.1f},{cy-s*0.5:.1f} Q{cx+s*0.5:.1f},{cy-s*0.45:.1f} {cx+s*0.5:.1f},{cy-s*0.9:.1f}" fill="none" stroke="{color}" stroke-width="{s*0.13:.1f}" stroke-linecap="round"/>')
+    beard = f'<path d="M{cx-s*0.05:.1f},{cy+s*0.3:.1f} L{cx+s*0.05:.1f},{cy+s*0.3:.1f} L{cx:.1f},{cy+s*0.55:.1f} Z" fill="{color}"/>'
+    return _critter_base(cx, cy, s, color, horns, extras_front=beard)
+
+def zodiac_monkey(cx, cy, s, color):
+    ears = f'<circle cx="{cx-s*0.48:.1f}" cy="{cy-s*0.2:.1f}" r="{s*0.2:.1f}" fill="{color}"/><circle cx="{cx+s*0.48:.1f}" cy="{cy-s*0.2:.1f}" r="{s*0.2:.1f}" fill="{color}"/>'
+    face = f'<ellipse cx="{cx}" cy="{cy}" rx="{s*0.3:.1f}" ry="{s*0.26:.1f}" fill="#e8c9a0"/>'
+    tail = f'<path d="M{cx+s*0.8:.1f},{cy+s*0.5:.1f} Q{cx+s*1.5:.1f},{cy+s*0.6:.1f} {cx+s*1.4:.1f},{cy-s*0.1:.1f}" fill="none" stroke="{color}" stroke-width="1.8" stroke-linecap="round"/>'
+    return _critter_base(cx, cy, s, color, ears, extras_back=tail, extras_front=face)
+
+def zodiac_rooster(cx, cy, s, color):
+    comb = f'<path d="M{cx-s*0.2:.1f},{cy-s*0.55:.1f} q{s*0.05:.1f},{-s*0.3:.1f} {s*0.15:.1f},{-s*0.1:.1f} q{s*0.05:.1f},{-s*0.25:.1f} {s*0.15:.1f},{-s*0.05:.1f} q{s*0.05:.1f},{-s*0.22:.1f} {s*0.15:.1f},0" fill="none" stroke="#c0392b" stroke-width="{s*0.14:.1f}" stroke-linecap="round"/>'
+    wattle = f'<path d="M{cx+s*0.15:.1f},{cy+s*0.05:.1f} q{s*0.1:.1f},{s*0.15:.1f} 0,{s*0.28:.1f}" fill="none" stroke="#c0392b" stroke-width="{s*0.1:.1f}" stroke-linecap="round"/>'
+    tail = f'<path d="M{cx-s*0.75:.1f},{cy+s*0.3:.1f} Q{cx-s*1.3:.1f},{cy-s*0.3:.1f} {cx-s*1.1:.1f},{cy-s*0.8:.1f} M{cx-s*0.75:.1f},{cy+s*0.4:.1f} Q{cx-s*1.35:.1f},{cy:.1f} {cx-s*1.3:.1f},{cy-s*0.5:.1f}" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round"/>'
+    beak = f'<path d="M{cx+s*0.42:.1f},{cy-s*0.1:.1f} l{s*0.18:.1f},{s*0.06:.1f} l{-s*0.16:.1f},{s*0.12:.1f} Z" fill="#e8a13a"/>'
+    return _critter_base(cx, cy, s, color, comb, extras_back=tail, extras_front=wattle + beak)
+
+def zodiac_dog(cx, cy, s, color):
+    ears = f'<path d="M{cx-s*0.35:.1f},{cy-s*0.3:.1f} q{-s*0.35:.1f},{s*0.05:.1f} {-s*0.3:.1f},{s*0.45:.1f}" fill="none" stroke="{color}" stroke-width="{s*0.24:.1f}" stroke-linecap="round"/><path d="M{cx+s*0.35:.1f},{cy-s*0.3:.1f} q{s*0.35:.1f},{s*0.05:.1f} {s*0.3:.1f},{s*0.45:.1f}" fill="none" stroke="{color}" stroke-width="{s*0.24:.1f}" stroke-linecap="round"/>'
+    tail = f'<path d="M{cx-s*0.8:.1f},{cy+s*0.4:.1f} Q{cx-s*1.3:.1f},{cy:.1f} {cx-s*1.1:.1f},{cy-s*0.4:.1f}" fill="none" stroke="{color}" stroke-width="2" stroke-linecap="round"/>'
+    nose = f'<circle cx="{cx}" cy="{cy-s*0.05:.1f}" r="{s*0.08:.1f}" fill="#2a2733"/>'
+    return _critter_base(cx, cy, s, color, ears, extras_back=tail, extras_front=nose)
+
+def zodiac_pig(cx, cy, s, color):
+    ears = f'<path d="M{cx-s*0.35:.1f},{cy-s*0.45:.1f} l{-s*0.15:.1f},{-s*0.22:.1f} l{s*0.28:.1f},{s*0.08:.1f} Z" fill="{color}"/><path d="M{cx+s*0.35:.1f},{cy-s*0.45:.1f} l{s*0.15:.1f},{-s*0.22:.1f} l{-s*0.28:.1f},{s*0.08:.1f} Z" fill="{color}"/>'
+    snout = f'<ellipse cx="{cx}" cy="{cy+s*0.05:.1f}" rx="{s*0.22:.1f}" ry="{s*0.16:.1f}" fill="#e8a3a0"/>'
+    nostrils = f'<circle cx="{cx-s*0.06:.1f}" cy="{cy+s*0.05:.1f}" r="{s*0.03:.1f}" fill="#2a2733"/><circle cx="{cx+s*0.06:.1f}" cy="{cy+s*0.05:.1f}" r="{s*0.03:.1f}" fill="#2a2733"/>'
+    tail = f'<path d="M{cx+s*0.8:.1f},{cy+s*0.4:.1f} q{s*0.3:.1f},0 {s*0.25:.1f},{-s*0.25:.1f} q{-s*0.05:.1f},{-s*0.2:.1f} {s*0.15:.1f},{-s*0.15:.1f}" fill="none" stroke="{color}" stroke-width="1.6" stroke-linecap="round"/>'
+    return _critter_base(cx, cy, s, color, ears, extras_back=tail, extras_front=snout + nostrils)
+
+ZODIAC_SHAPES = {
+    "rat": zodiac_rat, "ox": zodiac_ox, "tiger": zodiac_tiger, "rabbit": zodiac_rabbit,
+    "snake": zodiac_snake, "horse": zodiac_horse, "goat": zodiac_goat, "monkey": zodiac_monkey,
+    "rooster": zodiac_rooster, "dog": zodiac_dog, "pig": zodiac_pig,
+}
+
 def chinese_dragon(y, s, color, gold, dur, begin):
     segs = 7
     path_pts = []
@@ -490,6 +570,14 @@ def necktie_shape(cx, top_y, s, color):
            f'L{cx+s*0.32:.1f},{top_y+s*1.3:.1f} L{cx:.1f},{top_y+s*1.55:.1f} L{cx-s*0.32:.1f},{top_y+s*1.3:.1f} '
            f'L{cx-s*0.1:.1f},{top_y+s*0.25:.1f} Z" fill="{color}"/>')
 
+def dove_shape(cx, cy, s, color):
+    """Simple seagull/dove silhouette - two swept wing curves, universally read as 'bird'."""
+    d = (f"M{cx-s:.1f},{cy:.1f} Q{cx-s*0.4:.1f},{cy-s*0.7:.1f} {cx:.1f},{cy:.1f} "
+        f"Q{cx+s*0.4:.1f},{cy-s*0.7:.1f} {cx+s:.1f},{cy:.1f} "
+        f"Q{cx+s*0.4:.1f},{cy-s*0.25:.1f} {cx:.1f},{cy-s*0.15:.1f} "
+        f"Q{cx-s*0.4:.1f},{cy-s*0.25:.1f} {cx-s:.1f},{cy:.1f} Z")
+    return f'<path d="{d}" fill="{color}"/>'
+
 # ---------- gentle / respectful motifs ----------
 
 def scene_flame(cx, cy, s, color, glow):
@@ -557,11 +645,18 @@ def crescent_stars(cx, cy, s, moon_color, star_color):
                    f'<animate attributeName="opacity" values="0.4;0.9;0.4" begin="{i*0.3}s" dur="2.4s" repeatCount="indefinite"/></g>')
     return "".join(out)
 
-def sailboat(cx, base_y, s, hull_color, sail_color):
+def sailboat(cx, base_y, s, hull_color, sail_color, begin=0):
     hull = f'<path d="M{cx-s*0.6:.1f},{base_y:.1f} Q{cx:.1f},{base_y+s*0.3:.1f} {cx+s*0.6:.1f},{base_y:.1f} Z" fill="{hull_color}"/>'
     mast = f'<line x1="{cx}" y1="{base_y}" x2="{cx}" y2="{base_y-s*1.3:.1f}" stroke="{hull_color}" stroke-width="1.4"/>'
     sail = f'<path d="M{cx:.1f},{base_y-s*1.2:.1f} L{cx:.1f},{base_y-s*0.1:.1f} L{cx-s*0.7:.1f},{base_y-s*0.2:.1f} Z" fill="{sail_color}"/>'
-    return f'<g transform="translate(0,0)">{hull}{mast}{sail}</g>'
+    boat = f'<g>{hull}{mast}{sail}</g>'
+    return (f'<g transform="translate({cx},{base_y})">'
+           f'<animateTransform attributeName="transform" type="translate" additive="sum" '
+           f'values="0 0;3 -3;0 0;-3 3;0 0" begin="{begin}s" dur="3.4s" repeatCount="indefinite"/>'
+           f'<g transform="translate({-cx},{-base_y})">'
+           f'<animateTransform attributeName="transform" type="rotate" '
+           f'values="-4 {cx} {base_y};4 {cx} {base_y};-4 {cx} {base_y}" begin="{begin}s" dur="3.4s" repeatCount="indefinite" additive="sum"/>'
+           f'{boat}</g></g>')
 
 def wave_line(W, y, color, amplitude, dur, begin):
     d = f"M-{W},{y} "
@@ -597,37 +692,38 @@ def build_scene(theme, p, W=980, H=150):
         colors = ["#f4c2c2", "#f7d6d6", p["rose"]]
         out.append(falling_particles("petal", 20, W, H, colors, seed=33, dur_range=(6.5, 10.5)))
     elif theme == "summer":
-        out.append(scene_sun(66, 36, 28, p["gold"]))
+        out.append(scene_sun(66, 34, 26, p["gold"]))
         out.append(wave_line(W, ground_y + 2, p["foam"], 5, 3.5, 0))
         out.append(wave_line(W, ground_y + 8, p["pine"], 4, 4.5, -1))
-        out.append(palm_tree(W * 0.85, ground_y, 46, "#8a6a4a", p["pine"]))
-        out.append(sailboat(W * 0.42, ground_y - 4, 20, p["subtle"], p["rose"]))
+        out.append(palm_tree(W * 0.88, ground_y, 50, "#8a6a4a", p["pine"]))
+        out.append(sailboat(W * 0.4, ground_y - 6, 20, p["subtle"], p["rose"], begin=0))
+        out.append(sailboat(W * 0.62, ground_y - 2, 12, p["muted"], p["gold"], begin=1.2))
     elif theme == "halloween":
         out.append(scene_fog(W, H, p["muted"]))
-        out.append(jack_o_lantern(W * 0.22, ground_y - 8, 34, "#e8823c", "#ffdb8a", begin=0))
-        out.append(jack_o_lantern(W * 0.47, ground_y - 6, 26, "#d9711f", "#ffdb8a", begin=0.7))
-        out.append(jack_o_lantern(W * 0.72, ground_y - 8, 32, "#e8823c", "#ffdb8a", begin=1.3))
-        out.append(scene_bat(28, "#2a2733", dur=10, begin=0, s=17))
-        out.append(scene_bat(50, "#413d4d", dur=8.5, begin=3, s=13))
+        out.append(jack_o_lantern(W * 0.16, ground_y - 4, 28, "#e8823c", "#ffdb8a", begin=0))
+        out.append(jack_o_lantern(W * 0.45, ground_y - 14, 36, "#d9711f", "#ffdb8a", begin=0.7))
+        out.append(jack_o_lantern(W * 0.75, ground_y - 2, 24, "#e8823c", "#ffdb8a", begin=1.3))
+        out.append(scene_bat(22, "#2a2733", dur=10, begin=0, s=17))
+        out.append(scene_bat(62, "#413d4d", dur=8.5, begin=3, s=13))
     elif theme == "christmas":
         out.append(scene_tree(W * 0.24, ground_y, 60, p["muted"], p["pine"], [p["rose"], p["gold"], p["foam"], p["iris"]]))
         out.append(scene_santa(38, p["muted"], p["rose"], p["text"], dur=13, begin=1))
     elif theme == "newyear":
-        pts = [(W*0.14,34,7),(W*0.4,24,9),(W*0.66,40,6),(W*0.86,30,8),(W*0.28,52,5),(W*0.55,58,6),(W*0.78,54,7),(W*0.5,45,10)]
+        pts = [(W*0.14,34,7),(W*0.4,20,10),(W*0.66,44,6),(W*0.86,28,9),(W*0.28,58,5),(W*0.55,64,6),(W*0.78,56,7),(W*0.5,42,11)]
         colors = [p["rose"], p["gold"], p["iris"], p["foam"]]
         for i, (x, y, s) in enumerate(pts):
             out.append(scene_firework(x, y, s, colors[i % len(colors)], begin=i * 0.5, dur=2.2 + (i % 3) * 0.3))
         year_text = str(__import__("datetime").date.today().year)
         out.append(scene_banner(W * 0.5, H - 8, 130, 22, p["iris"], p["base"], year_text))
     elif theme == "easter":
-        eggs = [(W*0.2, ground_y-6), (W*0.4, ground_y-16), (W*0.6, ground_y-4), (W*0.8, ground_y-14)]
+        eggs = [(W*0.18, ground_y-4), (W*0.4, ground_y-20), (W*0.63, ground_y-2), (W*0.84, ground_y-16)]
         egg_colors = [p["rose"], p["foam"], p["gold"], p["iris"]]
         for i, (x, y) in enumerate(eggs):
             out.append(scene_egg(x, y, 11, egg_colors[i % len(egg_colors)], p["base"]))
         out.append(scene_bunny(eggs, dur=8.0, color=p["text"]))
     elif theme == "labor_day":
-        for i, x in enumerate([W*0.3, W*0.5, W*0.7]):
-            out.append(muguet_sprig(x, ground_y, 34, "#faf6ee", p["pine"], begin=i*0.4))
+        for i, (x, sc) in enumerate([(W*0.28, 0.85), (W*0.5, 1.1), (W*0.72, 0.9)]):
+            out.append(muguet_sprig(x, ground_y, 34 * sc, "#faf6ee", p["pine"], begin=i*0.4))
     elif theme == "ve_day":
         out.append(arc_de_triomphe(W*0.5, ground_y, 64, p["subtle"]))
         out.append(scene_flame(W*0.5, ground_y - 6, 10, p["gold"], p["rose"]))
@@ -641,18 +737,19 @@ def build_scene(theme, p, W=980, H=150):
         out.append(floating_up("note", 14, W, H, colors, seed=44))
     elif theme == "bastille_day":
         out.append(eiffel_tower(W*0.82, ground_y, 60, p["subtle"]))
-        out.append(jet_patrol(30, 9, 0, ["#0055A4", "#FFFFFF", "#EF4135"]))
-        out.append(jet_patrol(46, 9, 0.15, ["#0055A4", "#FFFFFF", "#EF4135"]))
+        out.append(jet_patrol(26, 9, 0, ["#0055A4", "#FFFFFF", "#EF4135"]))
+        out.append(jet_patrol(44, 9, 0.15, ["#0055A4", "#FFFFFF", "#EF4135"]))
         out.append(jet_patrol(62, 9, 0.3, ["#0055A4", "#FFFFFF", "#EF4135"]))
-        pts = [(W*0.15,40,7,'#EF4135'),(W*0.35,26,9,'#FFFFFF'),(W*0.55,44,6,'#0055A4'),(W*0.25,58,6,'#0055A4')]
+        pts = [(W*0.15,44,7,'#EF4135'),(W*0.35,22,10,'#FFFFFF'),(W*0.55,48,6,'#0055A4'),(W*0.25,64,6,'#0055A4'),(W*0.45,36,8,'#EF4135')]
         for i, (x, y, s, c) in enumerate(pts):
             out.append(scene_firework(x, y, s, c, begin=4.5 + i*0.5, dur=2.2+(i%3)*0.3))
     elif theme == "assumption":
-        out.append(crescent_stars(W*0.5, 50, 16, "#faf4ed", p["gold"]))
+        out.append(crescent_stars(W*0.5, 55, 16, "#faf4ed", p["gold"]))
     elif theme == "toussaint":
         colors = ["#c9835a", "#b5654a", p["gold"], p["subtle"]]
-        for i, x in enumerate([W*0.2, W*0.4, W*0.62, W*0.8]):
-            out.append(f'<g transform="translate({x},{ground_y-12})">'
+        heights = [ground_y-8, ground_y-22, ground_y-4, ground_y-16]
+        for i, x in enumerate([W*0.18, W*0.38, W*0.6, W*0.8]):
+            out.append(f'<g transform="translate({x},{heights[i]:.1f})">'
                        f'<animateTransform attributeName="transform" type="rotate" values="-2;2;-2" '
                        f'begin="{i*0.5}s" dur="4s" repeatCount="indefinite" additive="sum"/>'
                        f'{mum_shape(colors[i%len(colors)], p["base"])}</g>')
@@ -669,25 +766,34 @@ def build_scene(theme, p, W=980, H=150):
         out.append(crepe_pan(W*0.5, ground_y - 10, 32, "#f3d9a0", "#4a4550", begin=0))
     elif theme == "mardi_gras":
         out.append(confetti_burst(W, H, [p["rose"], p["iris"], p["gold"], p["foam"]], n=22, seed=5))
-        out.append(mask_shape(W*0.3, ground_y - 20, 22, p["iris"], p["gold"]))
-        out.append(mask_shape(W*0.68, ground_y - 18, 18, p["rose"], p["gold"]))
+        out.append(mask_shape(W*0.28, ground_y - 26, 22, p["iris"], p["gold"]))
+        out.append(mask_shape(W*0.68, ground_y - 10, 18, p["rose"], p["gold"]))
     elif theme == "ascension":
         out.append(scene_light_rays(W*0.5, 8, 55, p["gold"]))
         colors = ["#f4c2c2", "#f7d6d6", p["rose"]]
         out.append(falling_particles("petal", 8, W, H, colors, seed=33, dur_range=(7, 10)))
     elif theme == "pentecost":
         colors = ["#f4c2c2", "#f7d6d6", p["rose"]]
-        out.append(falling_particles("petal", 14, W, H, colors, seed=33, dur_range=(6.5, 10.5)))
+        out.append(falling_particles("petal", 10, W, H, colors, seed=33, dur_range=(6.5, 10.5)))
+        out.append(f'<g transform="translate({W*0.5:.1f},40)">'
+                   f'<animateTransform attributeName="transform" type="translate" additive="sum" '
+                   f'values="0 0;14 -4;0 0;-14 4;0 0" dur="6s" repeatCount="indefinite"/>'
+                   f'{dove_shape(0, 0, 22, "#faf4ed")}</g>')
     elif theme == "mothers_day":
-        for i, x in enumerate([W*0.35, W*0.65]):
-            out.append(f'<g transform="translate({x},{ground_y-14})">{flower_full(p["rose"], p["gold"])}</g>')
-        for i, x in enumerate([W*0.5]):
-            out.append(f'<g transform="translate({x},40)">'
+        bouquet_x = W * 0.5
+        for i, dx in enumerate([-16, 0, 16]):
+            out.append(f'<g transform="translate({bouquet_x+dx:.1f},{ground_y - (10 if i==1 else 0):.1f})">'
+                       f'{flower_full(p["rose"] if i != 1 else p["gold"], p["base"])}</g>')
+        for i, x in enumerate([W*0.28, W*0.72]):
+            out.append(f'<g transform="translate({x},{50+i*10})">'
                        f'<animateTransform attributeName="transform" type="translate" additive="sum" '
-                       f'values="0 0;0 -6;0 0" dur="2s" repeatCount="indefinite"/>{heart_shape(p["rose"])}</g>')
+                       f'values="0 0;0 -6;0 0" begin="{i*0.5}s" dur="2s" repeatCount="indefinite"/>{heart_shape(p["rose"])}</g>')
     elif theme == "fathers_day":
-        out.append(gift_box(W*0.4, ground_y - 14, 22, p["pine"], p["gold"]))
-        out.append(necktie_shape(W*0.62, ground_y - 44, 14, p["iris"]))
+        out.append(gift_box(W*0.35, ground_y - 14, 24, p["pine"], p["gold"]))
+        out.append(necktie_shape(W*0.58, ground_y - 48, 16, p["iris"]))
+        out.append(f'<g transform="translate({W*0.78:.1f},{ground_y-16:.1f}) rotate(20)">'
+                   f'<rect x="-2.5" y="-16" width="5" height="24" rx="2" fill="{p["subtle"]}"/>'
+                   f'<circle cx="0" cy="-16" r="6" fill="none" stroke="{p["subtle"]}" stroke-width="3"/></g>')
     elif theme == "valentines":
         colors = [p["rose"], "#e58fa0", p["gold"]]
         rng = random.Random(7)
@@ -702,14 +808,27 @@ def build_scene(theme, p, W=980, H=150):
                        f'values="0 0;0 {-(H+20):.1f}" begin="{begin:.2f}s" dur="{dur:.2f}s" repeatCount="indefinite"/>'
                        f'{heart_shape(c)}</g>')
     elif theme == "chinese_new_year":
-        out.append(paper_lantern(W*0.12, 40, 20, "#c0392b", "#f1c40f", 0))
-        out.append(paper_lantern(W*0.12, 78, 16, "#a93226", "#f1c40f", 0.5))
-        out.append(paper_lantern(W*0.9, 36, 18, "#c0392b", "#f1c40f", 0.3))
-        out.append(paper_lantern(W*0.9, 72, 15, "#a93226", "#f1c40f", 0.8))
-        out.append(chinese_dragon(ground_y - 20, 9, "#c0392b", "#f1c40f", 10, 0))
-        out.append(envelope_shape(W*0.5, ground_y - 10, 22, "#c0392b", "#f1c40f"))
-        for i, x in enumerate([W*0.3, W*0.62, W*0.45]):
-            out.append(firecracker_burst(x, 50 + i*10, 12, "#f1c40f", begin=i*0.8))
+        from seasonal import current_zodiac_year, zodiac_animal
+        animal = zodiac_animal(current_zodiac_year())
+        out.append(paper_lantern(W*0.1, 34, 18, "#c0392b", "#f1c40f", 0))
+        out.append(paper_lantern(W*0.1, 68, 14, "#a93226", "#f1c40f", 0.5))
+        out.append(paper_lantern(W*0.92, 30, 16, "#c0392b", "#f1c40f", 0.3))
+        out.append(paper_lantern(W*0.92, 62, 13, "#a93226", "#f1c40f", 0.8))
+        for i, x in enumerate([W*0.25, W*0.75]):
+            out.append(firecracker_burst(x, 24 + i*14, 12, "#f1c40f", begin=i*0.8))
+        out.append(envelope_shape(W*0.86, ground_y - 8, 18, "#c0392b", "#f1c40f"))
+        if animal == "dragon":
+            out.append(chinese_dragon(ground_y - 24, 11, "#c0392b", "#f1c40f", 9, 0))
+        else:
+            shape_fn = ZODIAC_SHAPES.get(animal)
+            if shape_fn:
+                cx, cy = W * 0.48, ground_y - 22
+                out.append(f'<circle cx="{cx}" cy="{cy}" r="40" fill="#c0392b" opacity="0.25"/>')
+                out.append(f'<circle cx="{cx}" cy="{cy}" r="40" fill="none" stroke="#f1c40f" stroke-width="1.5" opacity="0.6"/>')
+                out.append(f'<g transform="translate({cx},{cy})">'
+                           f'<animateTransform attributeName="transform" type="translate" additive="sum" '
+                           f'values="0 0;0 -4;0 0" dur="2.4s" repeatCount="indefinite"/>'
+                           f'{shape_fn(0, 0, 34, "#f1c40f")}</g>')
     else:
         out.append(falling_particles("leaf", 14, W, H, [p["muted"]], seed=1))
 
