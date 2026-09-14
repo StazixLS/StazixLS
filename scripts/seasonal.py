@@ -78,6 +78,19 @@ def chinese_new_year(year):
         return date(year, m, d)
     return date(year, 2, 5)  # rough fallback for out-of-table years
 
+ZODIAC_ANIMALS = ["rat", "ox", "tiger", "rabbit", "dragon", "snake",
+                   "horse", "goat", "monkey", "rooster", "dog", "pig"]
+
+def zodiac_animal(year):
+    return ZODIAC_ANIMALS[(year - 2020) % 12]
+
+def current_zodiac_year(d=None):
+    d = d or date.today()
+    y = d.year
+    if abs((d - chinese_new_year(y)).days) <= abs((d - chinese_new_year(y - 1)).days):
+        return y
+    return y - 1
+
 def get_theme(d=None):
     d = d or date.today()
     m, day = d.month, d.day
