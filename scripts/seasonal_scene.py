@@ -128,8 +128,8 @@ def jack_o_lantern(cx, cy, s, body, glow, begin=0):
            f'<path d="M{cx+s*0.08:.1f},{cy-s*0.12:.1f} l{s*0.09:.1f},{-s*0.16:.1f} l{s*0.09:.1f},{s*0.16:.1f} Z" fill="{glow}"/>'
            f'<path d="M{cx-s*0.22:.1f},{cy+s*0.16:.1f} q{s*0.22:.1f},{s*0.18:.1f} {s*0.44:.1f},0 '
            f'l{-s*0.06:.1f},{-s*0.08:.1f} q{-s*0.16:.1f},{s*0.1:.1f} {-s*0.32:.1f},0 Z" fill="{glow}"/>')
-    period = 2.6
-    glow_layer = f'<g><animate attributeName="opacity" values="0.5;1;0.5" begin="{begin}s" dur="{period}s" repeatCount="indefinite"/>{face}</g>'
+    period = 3.4
+    glow_layer = f'<g><animate attributeName="opacity" values="1;1;0.08;0.08;1" keyTimes="0;0.42;0.5;0.92;1" begin="{begin}s" dur="{period}s" repeatCount="indefinite"/>{face}</g>'
     return f'<g>{"".join(ridges)}{body_shape}{stem}{glow_layer}</g>'
 
 def bat_shape(cx, cy, s, color):
@@ -798,13 +798,13 @@ def build_scene(theme, p, W=980, H=150):
                        f'begin="{i*0.6+0.3}s" dur="3.2s" repeatCount="indefinite" additive="sum"/>'
                        f'{cornflower_shape("#4a6fa5", p["gold"])}</g>')
     elif theme == "epiphany":
-        cx, cy = W*0.5, 84
+        cx, cy = W*0.5, 62
         out.append(f'<g transform="translate({cx},{cy})">'
                    f'<animateTransform attributeName="transform" type="rotate" values="0;360" '
-                   f'dur="18s" repeatCount="indefinite" additive="sum"/>{galette(0, 0, 26, "#e8b95c", "#c98a2e")}</g>')
-        out.append(f'<g transform="translate({cx},{cy-42:.1f})">'
+                   f'dur="18s" repeatCount="indefinite" additive="sum"/>{galette(0, 0, 20, "#e8b95c", "#c98a2e")}</g>')
+        out.append(f'<g transform="translate({cx},{cy-32:.1f})">'
                    f'<animateTransform attributeName="transform" type="translate" additive="sum" '
-                   f'values="0 0;0 -4;0 0" dur="2.2s" repeatCount="indefinite"/>{crown_shape(0, 0, 24, p["gold"], p["rose"])}</g>')
+                   f'values="0 0;0 -4;0 0" dur="2.2s" repeatCount="indefinite"/>{crown_shape(0, 0, 18, p["gold"], p["rose"])}</g>')
     elif theme == "candlemas":
         out.append(crepe_pan(W*0.5, ground_y - 10, 32, "#f3d9a0", "#4a4550", begin=0))
     elif theme == "mardi_gras":
@@ -824,15 +824,16 @@ def build_scene(theme, p, W=980, H=150):
                    f'{dove_shape(0, 0, 22, "#faf4ed")}</g>')
     elif theme == "mothers_day":
         bouquet_x = W * 0.5
+        bouquet_y = 58
         for i, dx in enumerate([-16, 0, 16]):
-            out.append(f'<g transform="translate({bouquet_x+dx:.1f},{ground_y - (10 if i==1 else 0):.1f})">'
-                       f'<animateTransform attributeName="transform" type="rotate" values="-3;3;-3" '
-                       f'begin="{i*0.3}s" dur="2.8s" repeatCount="indefinite" additive="sum"/>'
+            out.append(f'<g transform="translate({bouquet_x+dx:.1f},{bouquet_y - (10 if i==1 else 0):.1f})">'
+                       f'<animateTransform attributeName="transform" type="rotate" values="-7;7;-7" '
+                       f'begin="{i*0.3}s" dur="2.4s" repeatCount="indefinite" additive="sum"/>'
                        f'{flower_full(p["rose"] if i != 1 else p["gold"], p["base"])}</g>')
         for i, x in enumerate([W*0.28, W*0.72]):
-            out.append(f'<g transform="translate({x},{50+i*10})">'
+            out.append(f'<g transform="translate({x},{40+i*10})">'
                        f'<animateTransform attributeName="transform" type="translate" additive="sum" '
-                       f'values="0 0;0 -6;0 0" begin="{i*0.5}s" dur="2s" repeatCount="indefinite"/>{heart_shape(p["rose"])}</g>')
+                       f'values="0 0;0 -8;0 0" begin="{i*0.5}s" dur="1.8s" repeatCount="indefinite"/>{heart_shape(p["rose"])}</g>')
     elif theme == "fathers_day":
         gx, gy = W*0.35, ground_y - 14
         out.append(f'<g transform="translate({gx},{gy})">{gift_box(0, 0, 24, p["pine"], p["gold"])}</g>')
@@ -843,11 +844,12 @@ def build_scene(theme, p, W=980, H=150):
         out.append(f'<g transform="translate({W*0.58},{ground_y - 48})">'
                    f'<animateTransform attributeName="transform" type="rotate" values="-5;5;-5" '
                    f'dur="2.4s" repeatCount="indefinite" additive="sum"/>{necktie_shape(0, 0, 16, p["iris"])}</g>')
-        out.append(f'<g transform="translate({W*0.78:.1f},{ground_y-16:.1f}) rotate(20)">'
-                   f'<animateTransform attributeName="transform" type="rotate" values="14;26;14" '
+        out.append(f'<g transform="translate({W*0.78:.1f},{ground_y-16:.1f})">'
+                   f'<g transform="rotate(20)">'
+                   f'<animateTransform attributeName="transform" type="rotate" values="12;28;12" '
                    f'dur="2s" repeatCount="indefinite"/>'
                    f'<rect x="-2.5" y="-16" width="5" height="24" rx="2" fill="{p["subtle"]}"/>'
-                   f'<circle cx="0" cy="-16" r="6" fill="none" stroke="{p["subtle"]}" stroke-width="3"/></g>')
+                   f'<circle cx="0" cy="-16" r="6" fill="none" stroke="{p["subtle"]}" stroke-width="3"/></g></g>')
     elif theme == "valentines":
         colors = [p["rose"], "#e58fa0", p["gold"]]
         rng = random.Random(7)
@@ -876,14 +878,14 @@ def build_scene(theme, p, W=980, H=150):
         else:
             shape_fn = ZODIAC_SHAPES.get(animal)
             if shape_fn:
-                cx, cy = W * 0.48, 78
-                out.append(f'<circle cx="{cx}" cy="{cy}" r="42" fill="#c0392b" opacity="0.28">'
+                cx, cy = W * 0.48, 48
+                out.append(f'<circle cx="{cx}" cy="{cy}" r="33" fill="#c0392b" opacity="0.28">'
                            f'<animate attributeName="opacity" values="0.22;0.34;0.22" dur="2.6s" repeatCount="indefinite"/></circle>')
-                out.append(f'<circle cx="{cx}" cy="{cy}" r="42" fill="none" stroke="#f1c40f" stroke-width="1.6" opacity="0.7"/>')
+                out.append(f'<circle cx="{cx}" cy="{cy}" r="33" fill="none" stroke="#f1c40f" stroke-width="1.6" opacity="0.7"/>')
                 out.append(f'<g transform="translate({cx},{cy})">'
                            f'<animateTransform attributeName="transform" type="translate" additive="sum" '
-                           f'values="0 0;0 -5;0 0" dur="2.4s" repeatCount="indefinite"/>'
-                           f'{shape_fn(0, 0, 44, "#f1c40f")}'
+                           f'values="0 0;0 -4;0 0" dur="2.4s" repeatCount="indefinite"/>'
+                           f'{shape_fn(0, 0, 34, "#f1c40f")}'
                            f'<circle r="44" fill="none" stroke="#7a1f16" stroke-width="1" opacity="0.35"/>'
                            f'</g>')
     else:
